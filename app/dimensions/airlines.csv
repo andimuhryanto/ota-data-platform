@@ -1,0 +1,165 @@
+id|name|code|countryCode
+AL0000|Aegean Airlines|A3|GRC
+AL0001|Aer Lingus|EI|IRL
+AL0002|Aeroflot|SU|RUS
+AL0003|Air Arabia|G9|ARE
+AL0004|Air Asia|AK|MYS
+AL0005|Air Baltic|BT|LVA
+AL0006|Air Canada|AC|CAN
+AL0007|Air China|CA|CHN
+AL0008|Air France|AF|FRA
+AL0009|Air India|AI|IND
+AL0010|Air Italy|AZ|ITA
+AL0011|Air Japan|NH|JPN
+AL0012|Air Korea|KE|KOR
+AL0013|Air Mauritius|MK|MUS
+AL0014|Air New Zealand|NZ|NZL
+AL0015|Air Niugini|PX|PNG
+AL0016|Air North America|XA|CAN
+AL0017|Air Serbia|JU|SRB
+AL0018|Air Seychelles|HM|SYC
+AL0019|Air Sinai|MS|EGY
+AL0020|Air Tahiti Nui|TN|PYF
+AL0021|Air Transat|TS|CAN
+AL0022|Air Vanuatu|VU|VUT
+AL0023|Air Vietnam|VN|VNM
+AL0024|Alaska Airlines|AS|USA
+AL0027|American Airlines|AA|USA
+AL0028|American Eagle|MQ|USA
+AL0030|Asiana Airlines|OZ|KOR
+AL0031|Austrian Airlines|OS|AUT
+AL0032|Avianca|AV|COL
+AL0033|Avianca Brasil|O6|BRA
+AL0034|Azul|AD|BRA
+AL0035|Bahamasair|UP|BHS
+AL0036|Bangkok Airways|PG|THA
+AL0037|Batik Air|ID|IDN
+AL0038|Beijing Capital Airlines|JD|CHN
+AL0039|Belavia|B2|BLR
+AL0040|Bhutan Airlines|B3|BTN
+AL0041|Boliviana de Aviación|OB|BOL
+AL0042|British Airways|BA|GBR
+AL0043|Brussels Airlines|SN|BEL
+AL0044|Cayman Airways|KY|CYM
+AL0045|Cebu Pacific|5J|PHL
+AL0046|Central Asia Airways|ZY|TJK
+AL0047|Chengdu Airlines|EU|CHN
+AL0048|China Airlines|CI|TWN
+AL0049|China Eastern Airlines|MU|CHN
+AL0050|China Southern Airlines|CZ|CHN
+AL0051|China United Airlines|KN|CHN
+AL0052|Civair|UV|COM
+AL0053|Cobalt Air|CO|CYP
+AL0055|Condor|DE|DEU
+AL0056|Copa Airlines|CM|PAN
+AL0057|Croatia Airlines|OU|HRV
+AL0058|Cubana de Aviación|CU|CUB
+AL0059|Cyprus Airways|CY|CYP
+AL0060|Czech Airlines|OK|CZE
+AL0061|Delta Air Lines|DL|USA
+AL0062|DHL Aviation|LY|DEU
+AL0063|easyJet|U2|GBR
+AL0065|Emirates|EK|ARE
+AL0066|Ethiopian Airlines|ET|ETH
+AL0067|Etihad Airways|EY|ARE
+AL0068|EVA Air|BR|TWN
+AL0069|Finnair|AY|FIN
+AL0070|FlyDubai|FZ|ARE
+AL0071|Garuda Indonesia|GA|IDN
+AL0072|Germania|ST|DEU
+AL0073|GOL Linhas Aéreas|G3|BRA
+AL0074|Gulf Air|GF|BHR
+AL0075|Hainan Airlines|HU|CHN
+AL0076|Hawaiian Airlines|HA|USA
+AL0077|Hong Kong Airlines|HX|HKG
+AL0078|Iberia|IB|ESP
+AL0079|Icelandair|FI|ISL
+AL0080|IndiGo|6E|IND
+AL0081|Indonesia AirAsia|QZ|IDN
+AL0082|Iran Air|IR|IRN
+AL0083|Iraqi Airways|IA|IRQ
+AL0084|Japan Airlines|JL|JPN
+AL0085|Jet2|LS|GBR
+AL0086|JetBlue Airways|B6|USA
+AL0087|KLM Royal Dutch Airlines|KL|NLD
+AL0089|Kuwait Airways|KU|KWT
+AL0090|LATAM Airlines|LA|CHL
+AL0091|LATAM Airlines Brasil|LAT|BRA
+AL0092|Lebanon|ME|LBN
+AL0093|Lion Air|JT|IDN
+AL0094|LOT Polish Airlines|LO|POL
+AL0095|Lufthansa|LH|DEU
+AL0096|Luxair|LX|LUX
+AL0097|Malaysia Airlines|MH|MYS
+AL0098|Malindo Air|OD|MYS
+AL0101|Mesa Airlines|DH|USA
+AL0102|Mexican Airlines|AM|MEX
+AL0103|Eastar Jet|ZE|KOR
+AL0109|Evelop Airlines|XQ|DEU
+AL0110|Fiji Airways|FJ|FJI
+AL0112|Frontier Airlines|F9|USA
+AL0114|GoAir India|G8|IND
+AL0115|Golden Air|GO|SWE
+AL0121|Hi Fly|HF|PRT
+AL0134|LATAM Cargo France|LK|FRA
+AL0135|LIAT|LIA|VCT
+AL0142|Mandarin Airlines|FD|TWN
+AL0143|MasAir|4O|MEX
+AL0144|Meridiana Cargo|IY|ITA
+AL0147|MyTravel Lite|MT|
+AL0148|Namibian|DD|NAM
+AL0149|National Jet|8J|CAN
+AL0150|New Central Airlines|D7|CHN
+AL0151|New Zealand Air|ZB|
+AL0152|Nordwind Airlines|NW|RUS
+AL0153|Norwegian Air Shuttle|DY|NOR
+AL0155|Oman Air Cargo|WY|OMN
+AL0156|Pakistan International Airlines|PK|PAK
+AL0157|Pegasus Airlines|PC|TUR
+AL0158|Philippine Airlines|PR|PHL
+AL0160|Qatar Airways Cargo|QR|QAT
+AL0161|Raya Airways|7Y|BGD
+AL0162|Regional Express Airlines|QF|AUS
+AL0163|Regional Jet|7J|CAN
+AL0164|Royal Air Maroc Cargo|AT|MAR
+AL0165|Royal Jordanian|RJ|JOR
+AL0166|Ryanair|FR|IRL
+AL0167|S7 Airlines|S7|RUS
+AL0168|Scandinavian Airlines|SK|SWE
+AL0169|Scoot|TZ|SGP
+AL0170|Shandong Airlines|SC|CHN
+AL0171|Saudi Arabian Airlines Cargo|SV|SAU
+AL0174|Singapore Airlines Cargo|SQ|SGP
+AL0175|Spirit Airlines|NK|USA
+AL0176|Star Alliance|2A|NAM
+AL0178|Surinam Airways|PY|SUR
+AL0181|TAAG Angola Airlines|TA|AGO
+AL0182|TAROM|RO|ROU
+AL0183|Tasman Cargo Airlines|TF|NZL
+AL0184|Thai Airways International|TG|THA
+AL0185|Turkish Airlines Cargo|TK|TUR
+AL0186|Turkmenistan Airlines|TM|TKM
+AL0187|United Airlines|UA|USA
+AL0188|United Parcel Service|5X|USA
+AL0190|Ural Airlines|U6|RUS
+AL0191|Uzbekistan Airways|HY|UZB
+AL0192|Vanuatu Air Express|V4|VUT
+AL0194|Volaris|Y4|MEX
+AL0195|WestJet Encore|WS|CAN
+AL0196|Wizz Air|W6|HUN
+AL0198|Zip Jet|ZP|USA
+AL0200|Zambia Airways|ZR|ZMB
+AL0201|Zest Airways|Z2|PHL
+AL0203|TAP Air Portugal|TP|PRT
+AL0204|T'way Air|TW|KOR
+AL0205|Transaero|UN|RUS
+AL0206|Transavia|HV|NLD
+AL0210|Tyrolean Airways|OY|AUT
+AL0211|UTair|UT|RUS
+AL0213|Virgin Australia|VA|AUS
+AL0215|Vistara|UK|IND
+AL0216|VivaAerobus|VB|MEX
+AL0217|Wizz Air Ukraine|PS|UKR
+AL0218|WOW Air|W2|ISL
+AL0219|Xiamen Airlines|MF|CHN
+AL0221|Yas Air|Y7|ARE
