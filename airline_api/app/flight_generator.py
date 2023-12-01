@@ -1,54 +1,39 @@
 import random
-import csv
 from datetime import datetime, timedelta
-from math import radians, sin, cos, sqrt, atan2
+
 import os
 
+from .ota_utils import *
+
 class FlightGenerator:
-    def __init__(self, airlineCode=None, startDepartureDate=None, endDepartureDate=None, n=1, USDperKMRate=0.12):
+    def __init__(self, airlineCode:str, startDepartureDate:str=None, endDepartureDate:str=None, USDRate=0.12):
+        self.fileDir = 'app/dimensions' if os.getcwd() == '/code' else 'dimensions'
+        self._getAirlineDetails(airlineCode)
+        self.startDepartureDate = startDepartureDate if startDepartureDate is None else parseDate(startDepartureDate)
+        self.endDepartureDate = endDepartureDate if endDepartureDate is None else parseDate(endDepartureDate)
+        self.USDRate = USDRate
+        self._getAirports()
+
+    def _getAirlineDetails(self, airlineCode):
         self.airlineCode = airlineCode
-        self.startDepartureDate = startDepartureDate
-        self.endDepartureDate = endDepartureDate
-        self.n = n
-        self.fareRate = USDperKMRate
+        self.airline = filterList(readCsv(self.fileDir + '/airlines.csv'), {'code': ('==', self.airlineCode)})
+        self.airline = filterList(readCsv(self.fileDir + '/airlines.csv'), {'code': ('==', self.airlineCode)})[0]
+        self.airlineId = self.airline['id']
+        self.airlineCountryCode = self.airline['countryCode']
+        self.aircraftCarriers = filterList(readCsv(self.fileDir + '/aircraft_carriers.csv'), {'airlineId': ('==', self.airlineId)})
+        self.aircraftCarriersActive = filterList(self.aircraftCarriers, {'aircraftStatus': ('==', 'ACTIVE')})
 
-        fileDir = 'app/dimensions' if os.getcwd() == '/code' else 'dimensions'
-        airlines = self._readCsv(fileDir + '/airlines.csv', delimiter='|')
-        self.airlines = airlines
-        self.aircraftCarriers = self._readCsv(fileDir + '/aircraft_carriers.csv', delimiter='|')
-        self.airports = self._readCsv(fileDir + '/airports.csv', delimiter='|')
-        self.airline = None
+    def _getAirports(self):
+        self.airportsLocal = filterList(readCsv(self.fileDir + '/airports.csv'), {'countryCode': ('==', self.airlineCountryCode)})
+        self.airportsForeign = filterList(readCsv(self.fileDir + '/airports.csv'),{'countryCode': ('!=', self.airlineCountryCode)})
 
-        if airlineCode is not None:
-            self.airline = self._getAirline(airlineCode)
+    def _setAirlineCode(self, airlineCode:str):
+        self._getAirlineDetails(airlineCode)
 
-    @staticmethod
-    def _readCsv(filePath, delimiter=','):
-        with open(filePath, 'r') as file:
-            reader = csv.DictReader(file, delimiter=delimiter)
-            return list(reader)
+    def setFareRate(self, USDRate):
+        self.fareRate = USDRate
 
-    @staticmethod
-    def _parseDate(dateStr):
-        try:
-            return datetime.strptime(dateStr, '%Y-%m-%d')
-        except ValueError:
-            return datetime.strptime(dateStr, '%Y%m%d')
-
-    @staticmethod
-    def _randomDate(startDate, endDate):
-        return startDate + timedelta(
-            days=random.randint(0, (endDate - startDate).days)
-        )
-
-    def setFareRate(self, usd_km_rate):
-        self.fareRate = usd_km_rate
-
-    def setAirlineCode(self, airlineCode):
-        self.airlineCode = airlineCode
-        self.airline = self._getAirline(airlineCode)
-
-    def setDepartureDates(self, startDate, endDate):
+    def setDepartureDateRange(self, startDate, endDate):
         self.startDepartureDate = self._parseDate(startDate)
         self.endDepartureDate = self._parseDate(endDate)
 
@@ -57,116 +42,107 @@ class FlightGenerator:
 
     def setEndDepartureDates(self, endDate):
         self.endDepartureDate = self._parseDate(endDate)
-
-    def setNRecords(self, n):
-        try:
-            self.nRecords = n
-        except:
-            self.nRecords = int(n)
-
-    def _getAirline(self, airlineCode):
-        for airline in self.airlines:
-            if airline['code'] == airlineCode:
-                return airline
-
-    def _getAirlineCountry(self):
-        return self.airline['countryCode']
-
-    def _getAirport(self, countryCode, domestic=True):
-        if domestic:
-            airportsInCountry = [airport for airport in self.airports if airport['countryCode'] == countryCode]
-            return random.choice(airportsInCountry)
-        else:
-            foreignAirports = [airport for airport in self.airports if airport['countryCode'] != countryCode]
-            return random.choice(foreignAirports)
-
-    def _calculateDistance(self, origin_coord, destination_coord):
-        # Haversine Formula
-        lat1, lon1 = [float(v) for v in origin_coord]
-        lat2, lon2 = [float(v) for v in destination_coord]
-
-        # Radius of the Earth in kilometers
-        R = 6371.0
-
-        # Convert latitude and longitude from degrees to radians
-        lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
-
-        # Calculate the differences between latitudes and longitudes
-        dlat = lat2 - lat1
-        dlon = lon2 - lon1
-
-        # Haversine formula
-        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        # Calculate the distance
-        distance = R * c
-
-        return distance
-
+    
     def _calculateFare(self, distance):
-        return self.fareRate * distance
-
-    def _generateFlight(self, startDate, endDate, domestic=True, domesticAirport=None, inCountryFlight=True, returnDetails=True):
-        airlineCountry = self._getAirlineCountry()
-        airport1 = self._getAirport(airlineCountry, domestic=domestic)
-
+        return self.USDRate * distance
+    
+    def _sampleAirport(self, domestic=True):
         if domestic:
-            airport2 = self._getAirport(airlineCountry, domestic=domestic)
+            return random.choice(self.airportsLocal)
         else:
-            destinationCountry = airlineCountry if inCountryFlight else random.choice(
-                [airport['countryCode'] for airport in self.airports if airport['countryCode'] != airlineCountry])
-            airport2 = self._getAirport(destinationCountry, domestic=not domestic)
+            return random.choice(self.airportsForeign)
+    def _sampleAircraftCarrier(self):
+        return random.choice(self.aircraftCarriersActive)
+    
+    def _generateFlight(self, startDate, endDate, domestic=True, intlFlightDirection=None):
+        
+        aircraftCarrier = self._sampleAircraftCarrier()
+        domesticAirport = self._sampleAirport()
+        counterAirport = self._sampleAirport() if domestic else self._sampleAirport(domestic=False)
 
-        airportPairs = [airport1, airport2]
+        distanceKm = calculateDistance(
+            originCoord=(domesticAirport['lat'], domesticAirport['lon']), 
+            destinationCoord=(counterAirport['lat'], counterAirport['lon'])
+        )
 
-        if domesticAirport is None:
-            random.shuffle(airportPairs)
-        else:
-            if domesticAirport == 0:
-                airportPairs = [airport1, airport2]
-            else:
-                airportPairs = [airport2, airport1]
-        departureAirport, destinationAirport = airportPairs
-        distanceKm = self._calculateDistance(
-            [departureAirport['lat'], departureAirport['lon']], [destinationAirport['lat'], destinationAirport['lon']])
         fare = self._calculateFare(distanceKm)
-
-        airlineValues = self.airline if returnDetails else {'code': self.airline['code']}
-        departureAirportValues = departureAirport if returnDetails else {'iata': departureAirport['iata']}
-        destinationAirportValues = destinationAirport if returnDetails else {'iata': destinationAirport['iata']}
+        departureTime = randomDate(startDate, endDate, includeTime=True)
+        
+        if intlFlightDirection == 'in': # To Domestic Airport 
+            originAirport, destinationAirport = counterAirport, domesticAirport
+        elif intlFlightDirection == 'out': # From Domestic Airport 
+            originAirport, destinationAirport = domesticAirport, counterAirport
+        else: # Random Direction
+            originAirport, destinationAirport = random.choices([domesticAirport, counterAirport], k=2)
 
         flight = {
-            'airline': airlineValues,
-            'departureAirport': departureAirportValues,
-            'destinationAirport': destinationAirportValues,
-            'departureDate': self._randomDate(startDate, endDate).strftime('%Y-%m-%d'),
-            'distanceKm': distanceKm,
-            'fare_usd': fare
+            'airline': self.airline
+            , 'aircraftCarrier': aircraftCarrier
+            , 'origin': originAirport
+            , 'destination': destinationAirport
+            , 'departureTime': departureTime.strftime('%Y-%m-%d %H:%M:%S')
+            , 'distanceKm': distanceKm
+            , 'fareUSD': fare
         }
+
         return flight
 
-    def generateDomesticFlights(self, startDate=None, endDate=None, n=None, returnDetails=True):
-        startDate = self.startDepartureDate if startDate is None else self._parseDate(startDate)
-        endDate = self.endDepartureDate if endDate is None else self._parseDate(endDate)
-        n = self.nRecords if n is None else n
+    def generateDomesticFlights(self, numRecords:int=1):
+        flights = [self._generateFlight(self.startDepartureDate, self.endDepartureDate) for _ in range(numRecords)]
+        return flights
+    
+    def generateInternationalFlights(self, numRecords:1, intlFlightDirection=None):
+        flights = []
+        for _ in range(numRecords):
+            flight = self._generateFlight(self.startDepartureDate, self.endDepartureDate, domestic=False, intlFlightDirection=intlFlightDirection)
+            flights.append(flight)
 
-        domesticFlights = []
-        for _ in range(n):
-            flight = self._generateFlight(startDate, endDate, domestic=True, returnDetails=returnDetails)
-            domesticFlights.append(flight)
+        return flights
 
-        return domesticFlights
+class Dimensions:
+    def __init__(self):
+        self.fileDir = 'app/dimensions' if os.getcwd() == '/code' else 'dimensions'
+        
+    def getAirportList(self, countryCode=None, iataCode=None):
+        filters = {}
+        airports = readCsv(self.fileDir + '/airports.csv')
 
-    def generateInternationalFlights(self, startDate=None, endDate=None, n=None, domesticDeparture=None, inCountryFlight=True, returnDetails=True):
-        startDate = self.startDepartureDate if startDate is None else self._parseDate(startDate)
-        endDate = self.endDepartureDate if endDate is None else self._parseDate(endDate)
-        n = self.nRecords if n is None else n
+        if countryCode: filters.update({'countryCode': ('==', countryCode)})
+        if iataCode: filters.update({'iata': ('==', iataCode)})
 
-        internationalFlights = []
-        for _ in range(n):
-            flight = self._generateFlight(startDate, endDate, domestic=False, domesticAirport=domesticDeparture,
-                                          inCountryFlight=inCountryFlight, returnDetails=returnDetails)
-            internationalFlights.append(flight)
+        if filters:
+            airports = filterList(airports, conditions=filters)
+        
+        return airports
 
-        return internationalFlights
+    def getAirlineList(self, airlineCode=None, countryCode=None):
+        filters = {}
+        airlines = readCsv(self.fileDir + '/airlines.csv')
+        if countryCode: filters.update({'countryCode': ('==', countryCode)})
+        if airlineCode: filters.update({'code': ('==', airlineCode)})
+
+        if filters:
+            airlines = filterList(airlines, conditions=filters)
+        
+        return airlines
+    
+    def getAircraftCarrierLiest(self, airlineCode=None):
+        filters = {}
+        aircraftCarriers = readCsv(self.fileDir + '/aircraft_carriers.csv')
+
+        if airlineCode: filters.update({'airlineCode': ('==', airlineCode)})
+        if filters:
+            aircraftCarriers = filterList(aircraftCarriers, conditions=filters)
+        
+        return aircraftCarriers
+
+
+#FG = FlightGenerator(airlineCode='GA', startDepartureDate='2023-01-01', endDepartureDate='2023-01-02')
+#print(FG.airline)
+#print(FG.airportsLocal[0]['countryCode'], FG.airportsForeign[0]['countryCode'])
+#print(FG.startDepartureDate, FG.endDepartureDate)
+#print(FG.generateDomesticFlights(1))
+#print(FG.generateInternationalFlights(1, intlFlightDirection='out'))
+#print([airport['name'] for airport in FG.getAirportList(countryCode='IDN', iataCode='CGK')])
+#print(FG.getAirlineList(countryCode='IDN'))
+#print(FG.getAircraftCarrierLiest(airlineCode='GA'))
